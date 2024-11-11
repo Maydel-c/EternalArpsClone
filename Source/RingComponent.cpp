@@ -14,9 +14,6 @@
 //==============================================================================
 RingComponent::RingComponent()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
 }
 
 RingComponent::~RingComponent()
@@ -31,4 +28,9 @@ void RingComponent::paint (juce::Graphics& g)
 
 void RingComponent::resized()
 {
+}
+
+void RingComponent::particleStrikes()
+{
+    sendChangeMessage();
 }

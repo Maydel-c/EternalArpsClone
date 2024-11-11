@@ -15,7 +15,10 @@
 //==============================================================================
 /*
 */
-class ParticleComponent  : public juce::Component
+
+
+
+class ParticleComponent  : public juce::Component, public juce::ChangeListener
 {
 public:
     ParticleComponent();
@@ -23,7 +26,10 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
-
-private:
+    void changeListenerCallback (juce::ChangeBroadcaster* source) override;
+    static juce::Atomic<bool> plucked;
+    
+private:   
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParticleComponent)
 };
+

@@ -21,6 +21,8 @@ ParticleComponent::~ParticleComponent()
 {
 }
 
+juce::Atomic<bool> ParticleComponent::plucked { false };
+
 void ParticleComponent::paint (juce::Graphics& g)
 {
     auto bounds = juce::Rectangle<float>(4, 4);
@@ -32,3 +34,10 @@ void ParticleComponent::resized()
 {
 
 }
+
+void ParticleComponent::changeListenerCallback (juce::ChangeBroadcaster* source)
+{
+    DBG("Changed in listenerCallback");
+    plucked.set(true);
+}
+

@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class RingComponent  : public juce::Component
+class RingComponent  : public juce::Component, public juce::ChangeBroadcaster
 {
 public:
     RingComponent();
@@ -23,6 +23,8 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    void particleStrikes();
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RingComponent)

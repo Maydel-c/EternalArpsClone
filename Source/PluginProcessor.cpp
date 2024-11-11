@@ -22,10 +22,29 @@ EternalArpsCloneAudioProcessor::EternalArpsCloneAudioProcessor()
                        )
 #endif
 {
+    init();
 }
 
 EternalArpsCloneAudioProcessor::~EternalArpsCloneAudioProcessor()
 {
+}
+
+
+void EternalArpsCloneAudioProcessor::init()
+{
+    formatManager.registerBasicFormats();
+
+//    transportSource.addChangeListener(this);
+//    audioReader = formatManager.createReaderFor(juce::File(juce::String("Assets/vibraphone_C6.wav"))); //in DAW .exe folder or plugin .vst3 folder
+
+    audioReader = formatManager.createReaderFor(juce::File("/Users/Home/Documents/CPlusPlus/EternalArpsClone/Assets/vibraphone-C6.wav"));
+//    DBG(juce::File::getCurrentWorkingDirectory().getFullPathName());
+    if (audioReader != nullptr)
+    {
+        juce::AudioFormatReaderSource* newSource = new juce::AudioFormatReaderSource(audioReader, true);
+        transportSource.setSource(newSource, 0, nullptr, audioReader->sampleRate);
+        transportSource.setGain(1.0f);
+    }
 }
 
 //==============================================================================
@@ -93,14 +112,27 @@ void EternalArpsCloneAudioProcessor::changeProgramName (int index, const juce::S
 //==============================================================================
 void EternalArpsCloneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    transportSource.prepareToPlay(samplesPerBlock, sampleRate);
+
+//     // Load and play the sample when the plugin loads
+//     juce::File sampleFile("../Assets/vibraphone_C6.wav"); // Replace with the path to your audio file
+//     if (sampleFile.existsAsFile())
+//     {
+//         auto* reader = formatManager.createReaderFor(sampleFile);
+//         if (reader != nullptr)
+//         {
+//             sampleSource.reset(new juce::AudioFormatReaderSource(reader, true));
+//             transportSource.setSource(sampleSource.get(), 0, nullptr, reader->sampleRate);
+//             transportSource.start();
+//         }
+//     }
+    
+//    playSound();
 }
 
 void EternalArpsCloneAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    transportSource.releaseResources();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -135,27 +167,24 @@ void EternalArpsCloneAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    
+    // Pass the buffer to the transport source to fill it with sample audio
+    juce::AudioSourceChannelInfo audioSourceInfo(buffer);
+    transportSource.getNextAudioBlock(audioSourceInfo);
+    
+    if (ParticleComponent::plucked.compareAndSetBool(false, true))
     {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        playSound();
     }
+
+}
+
+void EternalArpsCloneAudioProcessor::playSound()
+{
+    transportSource.setPosition(0.0);
+    transportSource.start();
 }
 
 //==============================================================================
@@ -182,6 +211,10 @@ void EternalArpsCloneAudioProcessor::setStateInformation (const void* data, int 
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
 }
+
+//void changeListenerCallback (juce::ChangeBroadcaster* source)
+//{
+//}
 
 //==============================================================================
 // This creates new instances of the plugin..
