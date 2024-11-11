@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class RingComponent  : public juce::Component, public juce::ChangeBroadcaster
+class RingComponent  : public juce::Component, public juce::ChangeListener
 {
 public:
     RingComponent();
@@ -23,8 +23,9 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
-    
-    void particleStrikes();
+    void changeListenerCallback (juce::ChangeBroadcaster* source) override;
+    static juce::Atomic<bool> plucked1 /*, plucked2, plucked3 */;
+
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RingComponent)

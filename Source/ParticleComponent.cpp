@@ -21,7 +21,6 @@ ParticleComponent::~ParticleComponent()
 {
 }
 
-juce::Atomic<bool> ParticleComponent::plucked { false };
 
 void ParticleComponent::paint (juce::Graphics& g)
 {
@@ -35,9 +34,14 @@ void ParticleComponent::resized()
 
 }
 
-void ParticleComponent::changeListenerCallback (juce::ChangeBroadcaster* source)
+void ParticleComponent::particleStrikes()
 {
-    DBG("Changed in listenerCallback");
-    plucked.set(true);
+    sendChangeMessage();
 }
 
+
+int ParticleComponent::setParticleId(int Id)
+{
+    particleId = Id;
+    return particleId;
+}

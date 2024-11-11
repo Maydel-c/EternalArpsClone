@@ -33,10 +33,6 @@ EternalArpsCloneAudioProcessor::~EternalArpsCloneAudioProcessor()
 void EternalArpsCloneAudioProcessor::init()
 {
     formatManager.registerBasicFormats();
-
-//    transportSource.addChangeListener(this);
-//    audioReader = formatManager.createReaderFor(juce::File(juce::String("Assets/vibraphone_C6.wav"))); //in DAW .exe folder or plugin .vst3 folder
-
     audioReader = formatManager.createReaderFor(juce::File("../../../../Assets/vibraphone-C6.wav"));
 //    DBG(juce::File::getCurrentWorkingDirectory().getFullPathName());
     if (audioReader != nullptr)
@@ -114,19 +110,7 @@ void EternalArpsCloneAudioProcessor::prepareToPlay (double sampleRate, int sampl
 {
     transportSource.prepareToPlay(samplesPerBlock, sampleRate);
 
-//     // Load and play the sample when the plugin loads
-//     juce::File sampleFile("../Assets/vibraphone_C6.wav"); // Replace with the path to your audio file
-//     if (sampleFile.existsAsFile())
-//     {
-//         auto* reader = formatManager.createReaderFor(sampleFile);
-//         if (reader != nullptr)
-//         {
-//             sampleSource.reset(new juce::AudioFormatReaderSource(reader, true));
-//             transportSource.setSource(sampleSource.get(), 0, nullptr, reader->sampleRate);
-//             transportSource.start();
-//         }
-//     }
-    
+// Load and play the sample when the plugin loads
 //    playSound();
 }
 
@@ -174,11 +158,10 @@ void EternalArpsCloneAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     juce::AudioSourceChannelInfo audioSourceInfo(buffer);
     transportSource.getNextAudioBlock(audioSourceInfo);
     
-    if (ParticleComponent::plucked.compareAndSetBool(false, true))
+    if (RingComponent::plucked1.compareAndSetBool(false, true))
     {
         playSound();
     }
-
 }
 
 void EternalArpsCloneAudioProcessor::playSound()
