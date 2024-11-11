@@ -37,7 +37,7 @@ void EternalArpsCloneAudioProcessor::init()
 //    transportSource.addChangeListener(this);
 //    audioReader = formatManager.createReaderFor(juce::File(juce::String("Assets/vibraphone_C6.wav"))); //in DAW .exe folder or plugin .vst3 folder
 
-    audioReader = formatManager.createReaderFor(juce::File("/Users/Home/Documents/CPlusPlus/EternalArpsClone/Assets/vibraphone-C6.wav"));
+    audioReader = formatManager.createReaderFor(juce::File("../../../../Assets/vibraphone-C6.wav"));
 //    DBG(juce::File::getCurrentWorkingDirectory().getFullPathName());
     if (audioReader != nullptr)
     {
