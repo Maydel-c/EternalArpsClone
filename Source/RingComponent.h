@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "ParticleComponent.h"
 
 //==============================================================================
 /*
@@ -24,9 +25,13 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
-    static juce::Atomic<bool> plucked1 /*, plucked2, plucked3 */;
+    static juce::Atomic<bool> plucked1 /* ,plucked2, plucked3 */;
 
 
 private:
+//    ParticleComponent& particle1;
+//    ParticleComponent& particle2;
+//    ParticleComponent& particle3;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RingComponent)
 };

@@ -11,7 +11,7 @@
 
 //==============================================================================
 EternalArpsCloneAudioProcessorEditor::EternalArpsCloneAudioProcessorEditor (EternalArpsCloneAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p)/* , ring1(particle1, particle2, particle3) */
 {
     particleSeparationSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     particleSeparationSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 100, 50);
@@ -62,7 +62,7 @@ void EternalArpsCloneAudioProcessorEditor::resized()
 void EternalArpsCloneAudioProcessorEditor::timerCallback()
 {
     
-    updateSeparation(separation);
+//    updateSeparation(separation);
     
     auto particle1Position = particle1.getX() + 1;
     particle1Position %= (int)getWidth();
